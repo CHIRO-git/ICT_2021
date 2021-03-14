@@ -1,99 +1,138 @@
 import face_recognition
+import dlib
 import cv2
-import numpy as np
+import  numpy as np
 
-# This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
-# other example, but it includes some basic performance tweaks to make things run a lot faster:
-#   1. Process each video frame at 1/4 resolution (though still display it at full resolution)
-#   2. Only detect faces in every other frame of video.
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
-# PLEASE NOTE: This example requires OpenCV (the `cv2` library) to be installed only to read from your webcam.
-# OpenCV is *not* required to use the face_recognition library. It's only required if you want to run this
-# specific demo. If you have trouble installing it, try any of the other demos that don't require it instead.
+# range doesn't6 include last data
+ALL = list(range(0, 68))
+RIGHT_EYEBROW = list(range(17, 22))
+LEFT_EYEBROW = list(range(22, 27))
+RIGHT_EYE = list(range(36, 42))
+LEFT_EYE = list(range(42, 48))
+NOSE = list(range(27, 36))
+MOUTH_OUTLINE = list(range(48, 61))
+MOUTH_INNER = list(range(61, 68))
+JAWLINE = list(range(0, 17))
+FACE_COMPO = list(range(17, 68))
 
-# Get a reference to webcam #0 (the default one)
-video_capture = cv2.VideoCapture(0)
-
-# Load a sample picture and learn how to recognize it.
-test_image = face_recognition.load_image_file("test_002.jpg")
-test_face_encoding = face_recognition.face_encodings(test_image)[0]
+index = ALL
 
 
-# Create arrays of known face encodings and their names
-known_face_encodings = [
-    test_face_encoding
-]
-known_face_names = [
-    "L"
-]
 
-# Initialize some variables
-face_locations = []
-face_encodings = []
-face_names = []
-process_this_frame = True
 
-while True:
-    # Grab a single frame of video
-    ret, frame = video_capture.read()
+vid = cv2.VideoCapture(0)
 
-    # Resize frame of video to 1/4 size for faster face recognition processing
-    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
-    # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-    rgb_small_frame = small_frame[:, :, ::-1]
 
-    # Only process every other frame of video to save time
-    if process_this_frame:
-        # Find all the faces and face encodings in the current frame of video
+def capture(vid):
+    """
+    vid = cv VideoCapture
+    capture image from cam, save as jpeg file in user folder.
+    """
+    while True:
+        ret, frame = vid.read()
+
+        if ret:
+            cv2.imshow('frame_color', frame)
+            if cv2.waitKey(1) == ord('c'):  # if button input True, capture and save image as jpg
+                cv2.imwrite('./user/test_image.jpg', frame)
+                break
+
+def readimg(imgaddr):
+    """
+    imgaddr = jpg image file address
+    return encoding as list var.
+    encoding image for recognizing face
+    """
+    image = face_recognition.load_image_file(imgaddr)
+    encoding = face_recognition.face_encodings(image)[0]
+    return encoding
+
+def detect(vid, encodings):
+    """
+    vid = cv VideoCapture , encodings = list of encoding var.
+    If matched face exists, return True
+    from Cam video, find face and match with encoded face datas.
+    """
+    face_locations = []
+    face_encodings = []
+    while True:
+        ret, frame = vid.read()
+        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        rgb_small_frame = small_frame[:, :, ::-1]
+
         face_locations = face_recognition.face_locations(rgb_small_frame)
         face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
 
-        face_names = []
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
-            matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-            name = "Unknown"
-
-            # # If a match was found in known_face_encodings, just use the first one.
-            # if True in matches:
-            #     first_match_index = matches.index(True)
-            #     name = known_face_names[first_match_index]
-
-            # Or instead, use the known face with the smallest distance to the new face
-            face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-            best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
-                name = known_face_names[best_match_index]
-
-            face_names.append(name)
-
-    process_this_frame = not process_this_frame
+            matches = face_recognition.compare_faces(encodings, face_encoding)
+            # If a match was found in known_face_encodings, just use the first one.
+            if True in matches:
+                return True
 
 
-    # Display the results
-    for (top, right, bottom, left), name in zip(face_locations, face_names):
-        # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-        top *= 4
-        right *= 4
-        bottom *= 4
-        left *= 4
+def head(vid):
+    """
+    vid = cv VideoCapture
+    return face missed or head shake
+    find face from cam video, detect head shaken.
+    """
+    ret, img_frame = vid.read()
 
-        # Draw a box around the face
-        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+    img_frame = cv2.flip(img_frame, 1)  # only use for test! mirror mode
+    img_gray = cv2.cvtColor(img_frame, cv2.COLOR_BGR2GRAY)
 
-        # Draw a label with a name below the face
-        cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-        font = cv2.FONT_HERSHEY_DUPLEX
-        cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+    dets = detector(img_gray, 1)
+    Detected = False
+    for face in dets:
+        Detected = True
+        shape = predictor(img_frame, face)  # detect 68 dots from face
 
-    # Display the resulting image
-    cv2.imshow('Video', frame)
+        list_points = []
+        for p in shape.parts():
+            list_points.append([p.x, p.y])
 
-    # Hit 'q' on the keyboard to quit!
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        list_points = np.array(list_points)
 
-# Release handle to the webcam
-video_capture.release()
-cv2.destroyAllWindows()
+    # detect turning head
+    if Detected:
+        left_x = list_points[33][0] - list_points[31][0]
+        left_y = list_points[33][1] - list_points[31][1]
+        right_x = list_points[35][0] - list_points[33][0]
+        right_y = list_points[35][1] - list_points[33][1]
+        nose_left = np.sqrt(left_x * left_x + left_y * left_y)
+        nose_right = np.sqrt(right_x * right_x + right_y * right_y)
+        nose_ratio = nose_right / nose_left
+        if nose_ratio > 1.15:
+            head_shake = True
+            print("left")
+        elif nose_ratio < 0.85:
+            head_shake = True
+            print("right")
+        else:
+            head_shake = False
+            print("forward")
+    else :
+        print("face missed!")
+
+
+#debug
+encodings = []
+
+
+capture(vid)
+
+encodings.append(readimg('./user/test_image.jpg'))
+
+detected = detect(vid, encodings)
+
+if detected :
+    print("detected")
+    while True:
+        head(vid)
+        if cv2.waitKey(10) == ord("q"):
+            break
