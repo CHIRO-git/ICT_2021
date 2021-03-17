@@ -40,9 +40,6 @@ def capture(vid):
 
         if ret:
             cv2.imshow('frame_color', frame)
-            img_gray = cv2.cvtColor(img_frame, cv2.COLOR_BGR2GRAY)
-
-            dets = detector(img_gray, 1)
             if cv2.waitKey(1) == ord('c'):  # if button input True, capture and save image as jpg
                 cv2.imwrite(os.path.join(cwd, 'user/user_img.jpg'), frame)
                 break
