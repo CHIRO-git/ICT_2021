@@ -7,6 +7,7 @@ from face_recog import face_recog_mod as frm
 
 ########################################################################################################################
 
+cwd = os.path.abspath(os.path.dirname(__file__))
 gaze = GazeTracking()
 encodings = []
 vid = cv2.VideoCapture(0)
