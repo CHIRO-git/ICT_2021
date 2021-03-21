@@ -1,10 +1,13 @@
 import face_recognition
 import dlib
 import cv2
-import  numpy as np
+import numpy as np
+import os
+
+cwd = os.path.abspath(os.path.dirname(__file__))
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+predictor = dlib.shape_predictor(os.path.join(cwd, "shape_predictor_68_face_landmarks.dat"))
 
 # range doesn't6 include last data
 ALL = list(range(0, 68))
@@ -38,7 +41,7 @@ def capture(vid):
         if ret:
             cv2.imshow('frame_color', frame)
             if cv2.waitKey(1) == ord('c'):  # if button input True, capture and save image as jpg
-                cv2.imwrite('./user/test_image.jpg', frame)
+                cv2.imwrite(os.path.join(cwd, 'user/user_img.jpg'), frame)
                 break
 
 def readimg(imgaddr):
@@ -75,19 +78,19 @@ def detect(vid, encodings):
                 return True
 
 
-def head(vid):
+def head(img_frame):
     """
     vid = cv VideoCapture
     return face missed or head shake
     find face from cam video, detect head shaken.
     """
-    ret, img_frame = vid.read()
 
-    img_frame = cv2.flip(img_frame, 1)  # only use for test! mirror mode
+    # img_frame = cv2.flip(img_frame, 1)  # only use for test! mirror mode
     img_gray = cv2.cvtColor(img_frame, cv2.COLOR_BGR2GRAY)
 
     dets = detector(img_gray, 1)
     Detected = False
+    head_shake = True
     for face in dets:
         Detected = True
         shape = predictor(img_frame, face)  # detect 68 dots from face
@@ -107,32 +110,17 @@ def head(vid):
         nose_left = np.sqrt(left_x * left_x + left_y * left_y)
         nose_right = np.sqrt(right_x * right_x + right_y * right_y)
         nose_ratio = nose_right / nose_left
-        if nose_ratio > 1.15:
-            head_shake = True
-            print("left")
-        elif nose_ratio < 0.85:
+        if nose_ratio > 1.2:
             head_shake = True
             print("right")
+        elif nose_ratio < 0.8:
+            head_shake = True
+            print("left")
         else:
             head_shake = False
-            print("forward")
+            print("forward", end="\t")
     else :
         print("face missed!")
 
+    return Detected, head_shake
 
-#debug
-encodings = []
-
-
-capture(vid)
-
-encodings.append(readimg('./user/test_image.jpg'))
-
-detected = detect(vid, encodings)
-
-if detected :
-    print("detected")
-    while True:
-        head(vid)
-        if cv2.waitKey(10) == ord("q"):
-            break

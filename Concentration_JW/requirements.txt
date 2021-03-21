@@ -1,5 +1,0 @@
-numpy == 1.16.1
-opencv_python == 3.4.5.20
-dlib == 19.16.0
-opencv
-Tkinter (Tkinter for python 2.7, tinter for python 3.x)
