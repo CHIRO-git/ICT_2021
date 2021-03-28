@@ -1,6 +1,7 @@
 import pymysql
 import datetime
-
+import pickle
+import os
 
 # MySQL Connection
 conn = pymysql.connect(
@@ -12,13 +13,19 @@ conn = pymysql.connect(
 
 
 
-def upload(ctime,xpget) :
+def upload() :
     """
-    ctime = Concentration time data, format = '00:00:00'
-    xpget = conversed xp data from studying, format = int
     upload study time to database
     """
 
+    if os.path.isfile('save.dat') :
+        with open('save.dat', 'rb') as f:
+            ctime = pickle.load(f)
+    else :
+        print('Error : no save_data for uploading')
+        return
+
+    xpget = int(ctime[0:2])*60 + int(ctime[3:5])
 
     userNo = '1'
     saveDate = datetime.date.today()
@@ -37,7 +44,46 @@ def upload(ctime,xpget) :
     else :
         print("can't connect to db!")
 
-upload("00:15:00",500)
+
+def save(ctime) :
+    """
+    ctime = Concentration time data, format = '00:00:00'
+    save concentration time and saveDate as dat file
+    """
+    if os.path.isfile('save.dat') :
+        with open('save.dat', 'rb') as f:
+            stime = pickle.load(f)
+
+        hours = int(ctime[0:2]) + int(stime[0:2])
+        mins = int(ctime[3:5]) + int(stime[3:5])
+        sec = int(ctime[6:8]) + int(stime[6:8])
+
+        if sec >= 60:
+            sec -= 60
+            mins += 1
+
+        if mins >= 60:
+            mins -= 60
+            hours += 1
+
+        ctime = ('%02d' % hours +'%02d' % mins +'%02d' % sec)
+    with open('save.dat', 'wb') as f:
+        pickle.dump(ctime, f)
+
+def load():
+    """
+    return concentration time as string type, format = '00:00:00'
+    """
+
+    if os.path.isfile('save.dat') :
+        with open('save.dat', 'rb') as f:
+            return pickle.load(f)
+    else :
+        print('Error : no save data for loading')
+        return
+
+
+
 
 """
 # example codes
@@ -61,4 +107,3 @@ for row in rows:
 # close connection
 conn.close()
 """
-
