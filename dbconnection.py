@@ -31,15 +31,13 @@ def upload(ctime,xpget) :
         XP = curs.fetchone()[0]
         XP += xpget
         curs.execute("update user_data set XP = %s" % XP + " where userNo = %s", userNo)
+        conn.commit()
         conn.close()
         print('work done')
     else :
         print("can't connect to db!")
 
-
-upload('00:15:00',500)
-
-
+upload("00:15:00",500)
 
 """
 # example codes
