@@ -10,7 +10,8 @@ class Timer(Frame):
         self.startTime = 0.0
         self.nextTime = 0.0
         self.onRunning = 0
-        self.timestr = StringVar()
+        self.timestr1 = '00:00:00'
+        self.timestr2 = '00:00'
 
     def MakeWidget(self):
         self.SetTime(self.nextTime)
@@ -24,7 +25,8 @@ class Timer(Frame):
         hours = int(nextElap / (60 * 60))
         minutes = int(nextElap / 60)
         seconds = int(nextElap - minutes * 60.0)
-        self.timestr = ('%02d' % hours + '%02d' % minutes + ':' + '%02d' % seconds)
+        self.timestr1 = ('%02d' % hours + ':' + '%02d' % minutes + ':' + '%02d' % seconds)
+        self.timestr2 = ('%02d' % hours + ':' + '%02d' % minutes)
 
     def Start(self):
         if self.onRunning == 0:

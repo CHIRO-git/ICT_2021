@@ -37,3 +37,7 @@ def show(n,indicator) :
     elif n == 211: ## 2페이지 3번 1번
         mylcd.lcd_display_string(indicator[0] + "1. 예.", 1)
         mylcd.lcd_display_string(indicator[1] + "2. 아니요", 2)
+
+def show_clock(timestr) :
+    mylcd.lcd_display_string(timestr, 1)
+    mylcd.lcd_display_string("공부중 ... ", 2)

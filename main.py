@@ -54,7 +54,7 @@ while True :
                 ret, img = vid.read()
                 gaze.refresh(img)
                 frame = gaze.annotated_frame()
-                stopwatch.MakeWidget()
+                lcd.show_clock()
 
                 if gaze.is_right():
                     stopwatch.Stop()
@@ -65,10 +65,17 @@ while True :
                 elif gaze.is_closed():
                     stopwatch.Stop()
 
-            # need escape method!
+
+                lcd.show_clock(stopwatch.timestr2)
+                if type(interface.Ardread()) is int:
+                    db.save(str(stopwatch.timestr1))
+                    event = 0
+                    pageNo = 100
+                    break
         else :
             # can't find user face
             event = 0
+            pageNo = 100
 
     elif event == 5:
         db.upload()
