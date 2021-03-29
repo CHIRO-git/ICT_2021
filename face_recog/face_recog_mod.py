@@ -30,7 +30,7 @@ vid = cv2.VideoCapture(0)
 
 
 
-def capture(vid):
+def activate(vid):
     """
     vid = cv VideoCapture
     capture image from cam, save as jpeg file in user folder.
@@ -43,6 +43,15 @@ def capture(vid):
             if cv2.waitKey(1) == ord('c'):  # if button input True, capture and save image as jpg
                 cv2.imwrite(os.path.join(cwd, 'user/user_img.jpg'), frame)
                 break
+
+def deactivate():
+    imgpath = os.path.join(cwd, 'user/user_img.jpg')
+    if os.path.isfile(imgpath):
+        os.remove(imgpath)
+        return 'User deactivated'
+    else :
+        return 'No Userdata'
+
 
 def readimg(imgaddr):
     """
@@ -60,9 +69,11 @@ def detect(vid, encodings):
     If matched face exists, return True
     from Cam video, find face and match with encoded face datas.
     """
+    count = 0
     face_locations = []
     face_encodings = []
     while True:
+        count += 1
         ret, frame = vid.read()
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         rgb_small_frame = small_frame[:, :, ::-1]
@@ -76,6 +87,9 @@ def detect(vid, encodings):
             # If a match was found in known_face_encodings, just use the first one.
             if True in matches:
                 return True
+
+        if count > 600:
+            return False
 
 
 def head(img_frame):
