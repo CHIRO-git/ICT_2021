@@ -21,9 +21,10 @@ class Timer(Frame):
         self.timer = self.after(50, self.Updater)
 
     def SetTime(self, nextElap):
+        hours = int(nextElap / (60 * 60))
         minutes = int(nextElap / 60)
         seconds = int(nextElap - minutes * 60.0)
-        self.timestr = ('%02d' % minutes + ':' + '%02d' % seconds)
+        self.timestr = ('%02d' % hours + '%02d' % minutes + ':' + '%02d' % seconds)
 
     def Start(self):
         if self.onRunning == 0:
