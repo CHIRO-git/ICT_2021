@@ -89,4 +89,5 @@ def interface(pageNo, indicator, event, input):
                 elif indicator is False:
                     pageNo -= 12
 
-        return pageNo, indicator, event
+    input = 0
+    return pageNo, indicator, event, input

@@ -4,7 +4,7 @@ from time import *
 mylcd = RPi_I2C_driver.lcd()
 
 
-## a.bc a:페이지 b:번호 c:하위번호
+## abc a:페이지 b:번호 c:하위번호
 
 def show(n,indicator) :
     if n == 100:  ## 페이지1
