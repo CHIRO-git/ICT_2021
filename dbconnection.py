@@ -41,6 +41,8 @@ def upload() :
         conn.commit()
         conn.close()
         print('work done')
+        with open('save.dat', 'wb') as f:
+            pickle.dump('00:00:00', f)
     else :
         print("can't connect to db!")
 
