@@ -53,22 +53,22 @@ def deactivate():
         return 'No Userdata'
 
 
-def readimg(imgaddr):
-    """
-    imgaddr = jpg image file address
-    return encoding as list var.
-    encoding image for recognizing face
-    """
-    image = face_recognition.load_image_file(imgaddr)
-    encoding = face_recognition.face_encodings(image)[0]
-    return encoding
 
-def detect(vid, encodings):
+def detect(vid):
     """
     vid = cv VideoCapture , encodings = list of encoding var.
     If matched face exists, return True
     from Cam video, find face and match with encoded face datas.
     """
+    encodings =[]
+    imgpath = os.path.join(cwd, 'user/user_img.jpg')
+    if os.path.isfile(imgpath):
+        image = face_recognition.load_image_file(imgpath)
+        encoding = face_recognition.face_encodings(image)[0]
+        encodings.append(encoding)
+    else:
+        print('No Userdata')
+        return False
     count = 0
     face_locations = []
     face_encodings = []
@@ -89,6 +89,7 @@ def detect(vid, encodings):
                 return True
 
         if count > 600:
+            print("Can't find user!")
             return False
 
 
@@ -104,7 +105,7 @@ def head(img_frame):
 
     dets = detector(img_gray, 1)
     Detected = False
-    head_shake = True
+    concent = False
     for face in dets:
         Detected = True
         shape = predictor(img_frame, face)  # detect 68 dots from face
@@ -125,16 +126,16 @@ def head(img_frame):
         nose_right = np.sqrt(right_x * right_x + right_y * right_y)
         nose_ratio = nose_right / nose_left
         if nose_ratio > 1.2:
-            head_shake = True
+            concent = False
             print("right")
         elif nose_ratio < 0.8:
-            head_shake = True
+            concent = False
             print("left")
         else:
-            head_shake = False
+            concent = True
             print("forward", end="\t")
     else :
         print("face missed!")
 
-    return Detected, head_shake
+    return concent
 
