@@ -54,7 +54,7 @@ while True :
                 ret, img = vid.read()
                 gaze.refresh(img)
                 frame = gaze.annotated_frame()
-                stopwatch.MakeWidget()
+				lcd.show_clock()
 
                 if gaze.is_right():
                     stopwatch.Stop()
@@ -64,8 +64,10 @@ while True :
                     stopwatch.Start()
                 elif gaze.is_closed():
                     stopwatch.Stop()
-
-            # need escape method!
+			if input != 0 :
+				event = 0
+			if escaped:
+                db.save(stopwatch.timestr)
         else :
             # can't find user face
             event = 0
