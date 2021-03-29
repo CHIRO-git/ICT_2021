@@ -56,9 +56,9 @@ def save(ctime) :
         with open('save.dat', 'rb') as f:
             stime = pickle.load(f)
 
-        hours = int(ctime[0:2]) + int(stime[0:2])
-        mins = int(ctime[3:5]) + int(stime[3:5])
-        sec = int(ctime[6:8]) + int(stime[6:8])
+        hours 	= int(ctime[0:2]) + int(stime[0:2])
+        mins 	= int(ctime[3:5]) + int(stime[3:5])
+        sec 	= int(ctime[6:8]) + int(stime[6:8])
 
         if sec >= 60:
             sec -= 60

@@ -1,8 +1,8 @@
 import serial
 
-PORT = 'COM5'
-BaudRate = 9600
-ARD= serial.Serial(PORT,BaudRate)
+PORT 		= 'COM5'
+BaudRate 	= 9600
+ARD			= serial.Serial(PORT,BaudRate)
 def Decode(A):
     A = A.decode()
     A = int(A)
@@ -10,8 +10,8 @@ def Decode(A):
 
 def Ardread(): # return list [Ard1,Ard2]
     if ARD.readable():
-        LINE = ARD.readline()
-        code=Decode(LINE)
+        LINE 	= ARD.readline()
+        code	=Decode(LINE)
         print(code)
         return code
     else :
