@@ -42,23 +42,43 @@ while True :
         else:
             indic = [' ', '>']
 
-        pageNo, indicator, event = interface.interface(pageNo, indicator, event, interface.Ardread())
+        pageNo, indicator, event, input = interface.interface(pageNo, indicator, event, interface.Ardread())
     elif event == 1:
         frm.activate(vid)
     elif event == 2:
         frm.deactivate()
     elif event == 3:
-        encodings.append(frm.readimg(os.path.join(cwd, 'face_recog/user/user_img.jpg')))
-        detected = frm.detect(vid, encodings)
-        if detected
-    elif event == 4:
+        detected = frm.detect(vid)
+        if detected:
+            while True:
+                ret, img = vid.read()
+                gaze.refresh(img)
+                frame = gaze.annotated_frame()
+                stopwatch.MakeWidget()
+
+                if gaze.is_right():
+                    stopwatch.Stop()
+                elif gaze.is_left():
+                    stopwatch.Stop()
+                elif frm.head(img) and gaze.is_center():
+                    stopwatch.Start()
+                elif gaze.is_closed():
+                    stopwatch.Stop()
+
+            # need escape method!
+        else :
+            # can't find user face
+            event = 0
+
+    elif event == 5:
+        db.upload()
 
 
 
 
 
 
-
+"""
 if detected :
     print("detected")
     while True:
@@ -89,3 +109,4 @@ if detected :
             break
 
 cv2.destroyAllWindows()
+"""
