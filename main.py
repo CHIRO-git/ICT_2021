@@ -52,8 +52,8 @@ while True :
         pageNo = 100
         event = 0
     elif event == 3:
-        detected = frm.detect(vid)
-        if detected:
+        # detected = frm.detect(vid)
+        if True:
             while True:
                 ret, img = vid.read()
                 gaze.refresh(img)

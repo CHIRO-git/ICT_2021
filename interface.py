@@ -47,6 +47,8 @@ def interface(pageNo, indicator, event, input):
                 pageNo += 100
             elif pagenum(pageNo, 2) == 1 and pagenum(pageNo, 1) == 1:
                 pageNo += 1
+            elif pagenum(pageNo, 2) == 2 and pagenum(pageNo, 1) == 1:
+                pageNo += 1
 
     elif input == 5:
         # click
