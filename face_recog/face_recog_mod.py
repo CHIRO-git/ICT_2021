@@ -26,9 +26,6 @@ index 			= ALL
 
 
 
-vid = cv2.VideoCapture(0)
-
-
 
 def activate(vid):
     """

@@ -14,18 +14,18 @@ import interface
 
 # system initialize
 
-cwd 		= os.path.abspath(os.path.dirname(__file__))
-gaze 		= GazeTracking()
-encodings 	= []
-vid 		= cv2.VideoCapture(0)
+cwd = os.path.abspath(os.path.dirname(__file__))
+gaze = GazeTracking()
+encodings = []
+vid = cv2.VideoCapture(-1)
 
-stopwatch 	= startclock.Timer()
+stopwatch = startclock.Timer()
 stopwatch.Start()
 
-indicator 	= True # first true second false
-pageNo 		= 100
-temp_input 	= 0
-event 		= 0
+indicator = True # first true second false
+pageNo = 100
+temp_input = 0
+event = 0
 ########################################################################################################################
 
 # system main loop
@@ -43,15 +43,14 @@ while True :
             indic = [' ', '>']
 
         pageNo, indicator, event, input = interface.interface(pageNo, indicator, event, interface.Ardread())
-
     elif event == 1:
         frm.activate(vid)
-		event = 0
         pageNo = 100
+        event = 0
     elif event == 2:
         frm.deactivate()
-		event = 0
         pageNo = 100
+        event = 0
     elif event == 3:
         detected = frm.detect(vid)
         if detected:
@@ -59,7 +58,7 @@ while True :
                 ret, img = vid.read()
                 gaze.refresh(img)
                 frame = gaze.annotated_frame()
-                lcd.show_clock(stopwatch.timestr2)
+                lcd.show_clock(str(stopwatch.timestr2))
 
                 if frm.head(img):
                     if gaze.is_right():
@@ -70,10 +69,8 @@ while True :
                         stopwatch.Start()
                     elif gaze.is_closed():
                         stopwatch.Stop()
-                else :
+                else:
                     stopwatch.Stop()
-
-
 
                 if type(interface.Ardread()) is int:
                     db.save(str(stopwatch.timestr1))
@@ -87,5 +84,43 @@ while True :
 
     elif event == 5:
         db.upload()
-		event = 0
-        pageNo = 100
+        pageNo = 0
+        event = 100
+
+
+
+
+
+
+"""
+if detected :
+    print("detected")
+    while True:
+        ret, img = vid.read()
+        face_find, head_shake = frm.head(img)
+
+        # if
+        if head_shake is False:
+            gaze.refresh(img)
+            frame = gaze.annotated_frame()
+            stopwatch.MakeWidget()
+
+            if gaze.is_right():
+                stopwatch.Stop()
+                print("Looking right")
+            elif gaze.is_left():
+                stopwatch.Stop()
+                print("Looking left")
+            elif gaze.is_center():
+                stopwatch.Start()
+                print("Looking center")
+            elif gaze.is_closed():
+                stopwatch.Stop()
+                print("Eyes closed")
+
+
+        if cv2.waitKey(10) == ord("q") :
+            break
+
+cv2.destroyAllWindows()
+"""
