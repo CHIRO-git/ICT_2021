@@ -14,12 +14,12 @@ def show(n,indicator) :
         mylcd.lcd_display_string(indicator[0] + "1. Regist   ", 1)
         mylcd.lcd_display_string(indicator[1] + "2. Delete   ", 2)
     elif n == 112:  ## 1페이지 1번(사용자등록) 옆페이지 눌렀을 때
-        mylcd.lcd_display_string(indicator[0] + "3. Back     ", 1)
+        mylcd.lcd_display_string('>' + "3. Back     ", 1)
     elif n == 121:  ## 1페이지 2번(타이머) 눌렀을 때
         mylcd.lcd_display_string(indicator[0] + "1. Start    ", 1)
         mylcd.lcd_display_string(indicator[1] + "2. Quit     ", 2)
     elif n == 122: ## 1페이지 2번(타이머) 옆페이지 눌렀을 때
-        mylcd.lcd_display_string(indicator[0] + "3. Back.    ", 1)
+        mylcd.lcd_display_string('>' + "3. Back.    ", 1)
     elif n == 1.21: ## 1페이지 2번의 1번(시작하기) 눌렀을 때
         mylcd.lcd_display_string("Start timer", 1)
     elif n == 1.22: ## 1페이지 2번의 옆페이지 눌렀을 때

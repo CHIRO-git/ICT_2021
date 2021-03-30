@@ -17,7 +17,7 @@ import interface
 cwd = os.path.abspath(os.path.dirname(__file__))
 gaze = GazeTracking()
 encodings = []
-vid = cv2.VideoCapture(-1)
+vid = cv2.VideoCapture(0)
 
 stopwatch = startclock.Timer()
 stopwatch.Start()
@@ -27,24 +27,29 @@ pageNo = 100
 temp_input = 0
 event = 0
 indic = ['>', ' ']
+count = 0
 ########################################################################################################################
 
 # system main loop
 
 while True :
     # Interface main
-    lcd.show(pageNo,indic)
+    lcd.show(pageNo, indic)
 
     # event phase
     if event == 0:
         # control phase
+        temp_input = interface.Ardread()
+        pageNo, indicator, event, input = interface.interface(pageNo, indicator, event, temp_input)
+
         if indicator == True:
             indic = ['>', ' ']
         else:
             indic = [' ', '>']
 
-        pageNo, indicator, event, input = interface.interface(pageNo, indicator, event, interface.Ardread())
-    elif event == 1:
+
+
+    if event == 1:
         frm.activate(vid)
         pageNo = 100
         event = 0
@@ -56,6 +61,7 @@ while True :
         # detected = frm.detect(vid)
         if True:
             while True:
+                count += 1
                 ret, img = vid.read()
                 gaze.refresh(img)
                 frame = gaze.annotated_frame()
@@ -73,20 +79,25 @@ while True :
                 else:
                     stopwatch.Stop()
 
-                if type(interface.Ardread()) is int:
-                    db.save(str(stopwatch.timestr1))
-                    event = 0
-                    pageNo = 100
-                    break
+                if count > 10:
+                    count = 11
+                    if type(interface.Ardread()) is int:
+                        db.save(str(stopwatch.timestr1))
+                        event = 0
+                        pageNo = 100
+                        break
+                        count = 0
         else :
             # can't find user face
             event = 0
             pageNo = 100
-
+    elif event == 4:
+        pageNo = 100
+        event = 0
     elif event == 5:
         db.upload()
-        pageNo = 0
-        event = 100
+        pageNo = 100
+        event = 0
 
 
 

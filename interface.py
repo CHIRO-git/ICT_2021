@@ -13,7 +13,10 @@ def Ardread(): # return list [Ard1,Ard2]
         LINE = ARD.readline()
         code=Decode(LINE)
         print(code)
-        return code
+        if type(code) is int:
+            return code
+        else :
+            return 0
     else :
         return
 
