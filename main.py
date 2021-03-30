@@ -60,14 +60,18 @@ while True :
                 frame = gaze.annotated_frame()
                 lcd.show_clock(stopwatch.timestr2)
 
-                if gaze.is_right():
+                if frm.head(img):
+                    if gaze.is_right():
+                        stopwatch.Stop()
+                    elif gaze.is_left():
+                        stopwatch.Stop()
+                    elif gaze.is_center():
+                        stopwatch.Start()
+                    elif gaze.is_closed():
+                        stopwatch.Stop()
+                else :
                     stopwatch.Stop()
-                elif gaze.is_left():
-                    stopwatch.Stop()
-                elif frm.head(img) and gaze.is_center():
-                    stopwatch.Start()
-                elif gaze.is_closed():
-                    stopwatch.Stop()
+
 
 
                 if type(interface.Ardread()) is int:
