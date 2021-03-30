@@ -2,13 +2,14 @@ import serial
 
 PORT = '/dev/ttyACM0'
 BaudRate = 9600
-ARD= serial.Serial(PORT,BaudRate)
+
+ARD= serial.Serial(PORT, BaudRate)
 def Decode(A):
     A = A.decode()
     A = int(A)
     return A
 
-def Ardread(): # return list [Ard1,Ard2]
+def Ardread():
     if ARD.readable():
         LINE = ARD.readline()
         code=Decode(LINE)

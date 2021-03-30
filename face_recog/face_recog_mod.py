@@ -20,14 +20,7 @@ MOUTH_OUTLINE = list(range(48, 61))
 MOUTH_INNER = list(range(61, 68))
 JAWLINE = list(range(0, 17))
 FACE_COMPO = list(range(17, 68))
-
 index = ALL
-
-
-
-
-
-
 
 def activate(vid):
     """
@@ -38,14 +31,11 @@ def activate(vid):
         ret, frame = vid.read()
 
         if ret:
-            # img_frame = cv2.flip(img_frame, 1)  # only use for test! mirror mode
             img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             dets = detector(img_gray, 1)
-            Detected = False
             for face in dets:
-                Detected = True
-                shape = predictor(frame, face)  # detect 68 dots from face
+                shape = predictor(frame, face)
 
                 list_points = []
                 for p in shape.parts():
@@ -53,7 +43,7 @@ def activate(vid):
 
                 list_points = np.array(list_points)
 
-            if Detected:  # if button input True, capture and save image as jpg
+            if list_points is not []:  # if face detected, capture and save image as jpg
                 cv2.imwrite(os.path.join(cwd, 'user/user_img.jpg'), frame)
                 break
 
@@ -113,14 +103,11 @@ def head(img_frame):
     find face from cam video, detect head shaken.
     """
 
-    # img_frame = cv2.flip(img_frame, 1)  # only use for test! mirror mode
     img_gray = cv2.cvtColor(img_frame, cv2.COLOR_BGR2GRAY)
 
     dets = detector(img_gray, 1)
-    Detected = False
     concent = False
     for face in dets:
-        Detected = True
         shape = predictor(img_frame, face)  # detect 68 dots from face
 
         list_points = []
@@ -130,7 +117,7 @@ def head(img_frame):
         list_points = np.array(list_points)
 
     # detect turning head
-    if Detected:
+    if list_points is not []:
         left_x = list_points[33][0] - list_points[31][0]
         left_y = list_points[33][1] - list_points[31][1]
         right_x = list_points[35][0] - list_points[33][0]

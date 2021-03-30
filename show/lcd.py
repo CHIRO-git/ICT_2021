@@ -40,4 +40,4 @@ def show(n,indicator) :
 
 def show_clock(timestr) :
     mylcd.lcd_display_string(timestr, 1)
-    mylcd.lcd_display_string("Study Hard ...", 2)
+    mylcd.lcd_display_string("Study Hard...", 2)
