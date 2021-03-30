@@ -136,6 +136,7 @@ def head(img_frame):
             print("forward")
     else :
         print("face missed!")
+        concent = False
 
     return concent
 
