@@ -25,17 +25,15 @@ def pagenum(page,digit):
 def interface(pageNo, indicator, event, input):
 
     if input == -2:
-        # up
+        # down
         indicator = False
     elif input == 2:
-        # down
+        # up
         indicator = True
     elif input == -1:
         # left
         if pagenum(pageNo, 3) == 1:
-            if pagenum(pageNo, 2) == 1 and pagenum(pageNo, 1) == 2:
-                pageNo -= 1
-            elif pagenum(pageNo, 2) == 2 and pagenum(pageNo, 1) == 2:
+            if pagenum(pageNo, 1) == 2:
                 pageNo -= 1
         elif pagenum(pageNo, 3) == 2:
             if pagenum(pageNo, 2) == 0:
@@ -45,9 +43,7 @@ def interface(pageNo, indicator, event, input):
         if pagenum(pageNo, 3) == 1:
             if pagenum(pageNo, 2) == 0:
                 pageNo += 100
-            elif pagenum(pageNo, 2) == 1 and pagenum(pageNo, 1) == 1:
-                pageNo += 1
-            elif pagenum(pageNo, 2) == 2 and pagenum(pageNo, 1) == 1:
+            elif pagenum(pageNo, 1) == 1:
                 pageNo += 1
 
     elif input == 5:
