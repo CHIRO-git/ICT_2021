@@ -19,7 +19,7 @@ def Ardread():
         else :
             return 0
     else :
-        return
+        return 0
 
 def pagenum(page,digit):
     return (page % pow(10,digit)) / pow(10,digit-1)
