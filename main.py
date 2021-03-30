@@ -43,6 +43,7 @@ while True :
             indic = [' ', '>']
 
         pageNo, indicator, event, input = interface.interface(pageNo, indicator, event, interface.Ardread())
+
     elif event == 1:
         frm.activate(vid)
 		event = 0

@@ -1,4 +1,4 @@
-import RPi_I2C_driver
+from . import RPi_I2C_driver
 from time import *
 
 mylcd = RPi_I2C_driver.lcd()
