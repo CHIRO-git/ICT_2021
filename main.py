@@ -26,13 +26,14 @@ indicator = True # first true second false
 pageNo = 100
 temp_input = 0
 event = 0
+indic = ['>', ' ']
 ########################################################################################################################
 
 # system main loop
 
 while True :
     # Interface main
-    lcd.show(pageNo)
+    lcd.show(pageNo,indic)
 
     # event phase
     if event == 0:
