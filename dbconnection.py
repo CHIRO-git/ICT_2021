@@ -56,9 +56,9 @@ def save(ctime) :
         with open('save.dat', 'rb') as f:
             stime = pickle.load(f)
 
-        hours = int(ctime[0:2]) + int(stime[0:2])
-        mins = int(ctime[3:5]) + int(stime[3:5])
-        sec = int(ctime[6:8]) + int(stime[6:8])
+        hours 	= int(ctime[0:2]) + int(stime[0:2])
+        mins 	= int(ctime[3:5]) + int(stime[3:5])
+        sec 	= int(ctime[6:8]) + int(stime[6:8])
 
         if sec >= 60:
             sec -= 60
@@ -76,36 +76,9 @@ def load():
     """
     return concentration time as string type, format = '00:00:00'
     """
-
     if os.path.isfile('save.dat') :
         with open('save.dat', 'rb') as f:
             return pickle.load(f)
     else :
         print('Error : no save data for loading')
         return
-
-
-
-
-"""
-# example codes
-
-# data insert format
-# sql = "insert into studydata values(%s,%s,%s)"
-# curs.execute(sql,(str(userNo),saveDate,str(concenTime)))
-
-
-# data read format with condition
-sql = "select * from studydata where userNo = %s and saveDate = '%s'" % (str(userNo), saveDate)
-curs.execute(sql)
-
-# data Fetch & reading format
-rows = curs.fetchall()      # get all data from db
-for row in rows:
-    print(row[2].seconds)   # change timedelta format to integer as seconds
-
-
-
-# close connection
-conn.close()
-"""

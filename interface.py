@@ -1,21 +1,25 @@
 import serial
 
-PORT = 'COM5'
+PORT = '/dev/ttyACM0'
 BaudRate = 9600
-ARD= serial.Serial(PORT,BaudRate)
+
+ARD= serial.Serial(PORT, BaudRate)
 def Decode(A):
     A = A.decode()
     A = int(A)
     return A
 
-def Ardread(): # return list [Ard1,Ard2]
+def Ardread():
     if ARD.readable():
         LINE = ARD.readline()
         code=Decode(LINE)
         print(code)
-        return code
+        if type(code) is int:
+            return code
+        else :
+            return 0
     else :
-        return
+        return 0
 
 def pagenum(page,digit):
     return (page % pow(10,digit)) / pow(10,digit-1)
@@ -25,17 +29,15 @@ def pagenum(page,digit):
 def interface(pageNo, indicator, event, input):
 
     if input == -2:
-        # up
+        # down
         indicator = False
     elif input == 2:
-        # down
+        # up
         indicator = True
     elif input == -1:
         # left
         if pagenum(pageNo, 3) == 1:
-            if pagenum(pageNo, 2) == 1 and pagenum(pageNo, 1) == 2:
-                pageNo -= 1
-            elif pagenum(pageNo, 2) == 2 and pagenum(pageNo, 1) == 2:
+            if pagenum(pageNo, 1) == 2:
                 pageNo -= 1
         elif pagenum(pageNo, 3) == 2:
             if pagenum(pageNo, 2) == 0:
@@ -45,7 +47,7 @@ def interface(pageNo, indicator, event, input):
         if pagenum(pageNo, 3) == 1:
             if pagenum(pageNo, 2) == 0:
                 pageNo += 100
-            elif pagenum(pageNo, 2) == 1 and pagenum(pageNo, 1) == 1:
+            elif pagenum(pageNo, 1) == 1:
                 pageNo += 1
 
     elif input == 5:

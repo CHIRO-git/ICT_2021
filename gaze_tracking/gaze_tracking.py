@@ -9,17 +9,17 @@ from .calibration import Calibration
 class GazeTracking(object):
 
     def __init__(self):
-        self.frame = None
-        self.eye_left = None
-        self.eye_right = None
-        self.calibration = Calibration()
+        self.frame 			= None
+        self.eye_left 		= None
+        self.eye_right 		= None
+        self.calibration 	= Calibration()
 
         # _face_detector is used to detect faces
         self._face_detector = dlib.get_frontal_face_detector()
 
         # _predictor is used to get facial landmarks of a given face
-        cwd = os.path.abspath(os.path.dirname(__file__))
-        model_path = os.path.abspath(os.path.join(cwd, "trained_models/shape_predictor_68_face_landmarks.dat"))
+        cwd 			= os.path.abspath(os.path.dirname(__file__))
+        model_path 		= os.path.abspath(os.path.join(cwd, "trained_models/shape_predictor_68_face_landmarks.dat"))
         self._predictor = dlib.shape_predictor(model_path)
 
     @property
@@ -40,13 +40,13 @@ class GazeTracking(object):
         faces = self._face_detector(frame)
 
         try:
-            landmarks = self._predictor(frame, faces[0])
-            self.eye_left = Eye(frame, landmarks, 0, self.calibration)
-            self.eye_right = Eye(frame, landmarks, 1, self.calibration)
+            landmarks 		= self._predictor(frame, faces[0])
+            self.eye_left 	= Eye(frame, landmarks, 0, self.calibration)
+            self.eye_right 	= Eye(frame, landmarks, 1, self.calibration)
 
         except IndexError:
-            self.eye_left = None
-            self.eye_right = None
+            self.eye_left 	= None
+            self.eye_right	= None
 
     def refresh(self, frame):
         """Refreshes the frame and analyzes it.
@@ -77,7 +77,7 @@ class GazeTracking(object):
         the center is 0.5 and the extreme left is 1.0
         """
         if self.pupils_located:
-            pupil_left = self.eye_left.pupil.x / (self.eye_left.center[0] * 2 - 10)
+            pupil_left 	= self.eye_left.pupil.x / (self.eye_left.center[0] * 2 - 10)
             pupil_right = self.eye_right.pupil.x / (self.eye_right.center[0] * 2 - 10)
             return (pupil_left + pupil_right) / 2
 
@@ -87,7 +87,7 @@ class GazeTracking(object):
         the center is 0.5 and the extreme bottom is 1.0
         """
         if self.pupils_located:
-            pupil_left = self.eye_left.pupil.y / (self.eye_left.center[1] * 2 - 10)
+            pupil_left 	= self.eye_left.pupil.y / (self.eye_left.center[1] * 2 - 10)
             pupil_right = self.eye_right.pupil.y / (self.eye_right.center[1] * 2 - 10)
             return (pupil_left + pupil_right) / 2
 
@@ -126,9 +126,9 @@ class GazeTracking(object):
         frame = self.frame.copy()
 
         if self.pupils_located:
-            color = (0, 255, 0)
-            x_left, y_left = self.pupil_left_coords()
-            x_right, y_right = self.pupil_right_coords()
+            color 				= (0, 255, 0)
+            x_left, y_left 		= self.pupil_left_coords()
+            x_right, y_right 	= self.pupil_right_coords()
             cv2.line(frame, (x_left - 5, y_left), (x_left + 5, y_left), color)
             cv2.line(frame, (x_left, y_left - 5), (x_left, y_left + 5), color)
             cv2.line(frame, (x_right - 5, y_right), (x_right + 5, y_right), color)

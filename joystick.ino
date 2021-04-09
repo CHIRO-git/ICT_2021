@@ -1,10 +1,10 @@
-const int AXIS_X = A1;
-const int AXIS_Y = A2;
-const int SW_P = A3; 
-int x = 488;
-int y = 520;
-int s = 1;
-int flag = 0;
+const int AXIS_X  = A1;
+const int AXIS_Y  = A2;
+const int SW_P    = A3; 
+int x             = 488;
+int y             = 520;
+int s             = 1;
+int flag          = 0;
 
 void setup() {
   Serial.begin(9600);
